@@ -3,8 +3,6 @@ layout: post
 title:  "I ❤️ open source!"
 subtitle: Just look at this page!
 cover-img: /assets/img/2022-07-26-I-love-open-source/cover.jpg
-# thumbnail-img: /assets/img/2022-07-26-I-love-open-source/thumbnail.jpg
-# thumbnail-img: ""
 date:   2022-07-26 22:00:00 +0200
 tags: [random]
 ---
