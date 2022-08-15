@@ -4,6 +4,8 @@ title:  "I ❤️ open source!"
 subtitle: Just look at this page!
 cover-img: /assets/img/2022-07-26-I-love-open-source/cover.jpg
 date:   2022-07-26 22:00:00 +0200
+gh-repo: krzmaz/krzmaz.github.io
+gh-badge: [follow, star]
 tags: [random]
 ---
 # This is great! 
