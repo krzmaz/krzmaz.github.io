@@ -22,4 +22,4 @@ Now let's see what will I do with it...
 
 -------
 
-*The photo was taken almost exactly 6 years ago. It shows Lysefjord in Norway.*
+*The cover photo was taken almost exactly 6 years ago. It shows Lysefjord in Norway.*
