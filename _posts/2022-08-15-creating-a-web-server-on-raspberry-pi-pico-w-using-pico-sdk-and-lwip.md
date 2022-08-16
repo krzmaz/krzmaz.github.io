@@ -16,7 +16,7 @@ tags: [pico, pico_w, cmake, lwip]
 {:toc}
 ## Background  
 I never really looked into the first Raspberry Pi Pico. I get that the RP2040 microcontroller is a nice alternative to some members of the STM32 family, but I haven't been using those as well.  
-Any development board that doesn't come with wireless connectivity features is not likely to peek my interest. Most of my projects are about automating some part of my life and for the most part that needs a wireless data exchange. Some projects can even be done with a dev board alone, without connecting anything to it - one example being [LinakDeskEsp32Controller](https://github.com/krzmaz/LinakDeskEsp32Controller)
+Any development board that doesn't come with wireless connectivity features is not likely to pique my interest. Most of my projects are about automating some part of my life and for the most part that needs a wireless data exchange. Some projects can even be done with a dev board alone, without connecting anything to it - one example being [LinakDeskEsp32Controller](https://github.com/krzmaz/LinakDeskEsp32Controller)
 
 I ended up using ESP8266 and ESP32 in all my recent projects. They are great because of their high availability, the big community and in the ESP32's case - the use of industry standard: FreeRTOS.  
 However the downside is their unique Xtensa architecture which makes dealing with the toolchain a bit of a pain. 
@@ -45,12 +45,12 @@ The [web server implementation](https://github.com/krzmaz/pico-w-webserver-examp
 First of all, we need to download the `pico_sdk_import.cmake` script that will help us setup the SDK. To do that, there is a `get_pico_sdk_import_cmake` function in `cmake/utils.cmake`. The script download location is added to `.gitignore` file so that it isn't added to the repo.  
 After getting the script, we need to `include()` it before calling `project()` and then `pico_sdk_init()` in the top level `CMakeLists.txt`.
 
-Another external dependency is the `makefsdata` perl script. It's role will be described in the next section. As for CMake logic, we need to `file(DOWNLOAD` it and run it via `execute_process()`
+Another external dependency is the `makefsdata` perl script. Its role will be described in the next section. As for CMake logic, we need to `file(DOWNLOAD` it and run it via `execute_process()`
 
 ### HTML files to be served from the Pico W
 {: #HTML}
 lwIP supports providing HTML files in a filesystem structure that we can use in URLs when connecting to the created server. Those files can be found in `src/fs` folder. For now, there is only the most basic `index.html` file that will be the root of the server, and `ssi.shtml` that shows the ability to serve dynamic content using [Server Side Includes](https://en.wikipedia.org/wiki/Server_Side_Includes).  
-The "filesystem" data is usually provided in `fsdata.c` file, but I wanted to keep the raw HTML files in the repo as the source of truth and generate the `fsdata` based on them. For that I used the `makefsdata` perl script which, when pointed to a directory, creates the `fsdata` file containing the directory structure. The script creates `fsdata.c` which I'm renaming to `my_fsdata.c` to match the define of `HTTPD_FSDATA_FILE` in `lwipopts.h`. Leaving the name as is would require forcing the build system to ignore the default [fsdata.c](https://github.com/lwip-tcpip/lwip/blob/master/src/apps/http/fsdata.c) file in the lwIP sources.
+The "filesystem" data is provided in `fsdata.c` file by default, but storing HTTP data embedded into C makes editing it a pain. For quickly generating the C file, lwIP provides the `makefsdata` perl script which, when pointed to a directory, creates the `fsdata` file containing the whole directory structure. Since I didn't want to store two versions of the same data, I'm keeping the HTML files in git and generating the C file during build time. The script creates `fsdata.c` which I'm renaming to `my_fsdata.c` to match the define of `HTTPD_FSDATA_FILE` in `lwipopts.h`. Leaving the name as is would require forcing the build system to ignore the default [fsdata.c](https://github.com/lwip-tcpip/lwip/blob/master/src/apps/http/fsdata.c) file in the lwIP sources.
 
 Additionally I noticed that due to limited file extension matching in the `makefsdata` script, my `ssi.shtml` page was generated with `text/plain` content type instead of `text/html` making it not being rendered by the browser. I created a fork with a patch for that, used it in CMake of the example, and created [lwip#15](https://github.com/lwip-tcpip/lwip/pull/15).
 
